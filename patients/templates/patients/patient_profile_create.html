@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ health_data.name }}'s Record</title>
+</head>
+<body>
+    <h1>{{ health_data.name }}'s Health Record</h1>
+    <p>Age: {{ health_data.age }}</p>
+    <p>Gender: {{ health_data.gender }}</p>
+    <p>Weight: {{ health_data.weight }} kg</p>
+    <p>Height: {{ health_data.height }} cm</p>
+    <p>Activity Level: {{ health_data.activity_level }}</p>
+    <p>BMR: {{ health_data.BMR }} kcal</p>
+    <p>Daily Calories: {{ health_data.daily_calories }} kcal</p>
+
+    <a href="{% url 'patients:edit' health_data.id %}">Edit this Record</a>
+    <form method="post" action="{% url 'patients:delete' health_data.id %}">
+        {% csrf_token %}
+        <button type="submit">Delete this Record</button>
+    </form>
+
+    <a href="{% url 'patients:list' %}">Back to Health Records</a>
+</body>
+</html>

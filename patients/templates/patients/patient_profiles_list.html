@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Data List</title>
+</head>
+<body>
+    <h1>Health Records</h1>
+
+    <a href="{% url 'patients:new' %}">Add New Record</a>
+    <ul>
+        {% for record in health_data_list %}
+            <li>
+                <a href="{% url 'patients:detail' record.id %}">{{ record.name }}</a>
+                (Age: {{ record.age }}, Gender: {{ record.gender }})
+            </li>
+        {% empty %}
+            <li>No health records found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
