@@ -12,7 +12,7 @@
         <div>Welcome, {{ request.user.username }}</div>
         <div>
             <a href="{% url 'dashboard' %}">Dashboard</a>
-            <a href="{% url 'patients:patient_profile_create' %}">Add New Patient</a>
+            <a href="{% url 'patients:patient_create' %}">Add New Patient</a>
             <form method="post" action="{% url 'logout' %}" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit" class="logout">Logout</button>
@@ -21,23 +21,14 @@
     </nav>
     <div class="container">
         <h2>Patients List</h2>
+        
         <div class="cards-container">
-            {% if patients %}
-                {% for patient in patients %}
-                <div class="card">
-                    <h3>
-                        <a href="#">{{ patient.name }}</a>
-                    </h3>
-                    <p><strong>Age:</strong> {{ patient.age }}, <strong>Gender:</strong> {{ patient.gender }}</p>
-                    <p><strong>Weight:</strong> {{ patient.weight }} kg, <strong>Height:</strong> {{ patient.height }} cm</p>
-                    <p><strong>Activity Level:</strong> {{ patient.activity_level }}</p>
-                    <p><strong>Contact Number:</strong> {{ patient.contact_number }}</p>
-                    <p><strong>BMR:</strong> {{ patient.bmr }} kcal, <strong>Daily Calories:</strong> {{ patient.daily_calories }} kcal</p>
-                </div>
-                {% endfor %}
-            {% else %}
-                <p>No patients found.</p>
-            {% endif %}
+            {% for patient in patients %}
+            <div class="card">
+                <h3><a href="{% url 'patients:patient_detail' patient.id %}">{{ patient.name }}</a></h3>
+                <p><strong>Contact Number:</strong> {{ patient.contact_number }}</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </body>

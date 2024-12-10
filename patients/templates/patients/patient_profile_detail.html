@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+    <nav>
+        <div>Welcome, {{ request.user.username }}</div>
+        <div>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'patients:patient_profiles_list' %}">Patient Profile List</a>
+            <a href="{% url 'patients:patient_create' %}">Add New Patient</a>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout">Logout</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>Patient Details</h2>
+        <p><strong>Name:</strong> {{ patient.name }}</p>
+        <p><strong>Age:</strong> {{ patient.age }}</p>
+        <p><strong>Gender:</strong> {{ patient.gender }}</p>
+        <p><strong>Weight:</strong> {{ patient.weight }} kg</p>
+        <p><strong>Height:</strong> {{ patient.height }} cm</p>
+        <p><strong>Activity Level:</strong> {{ patient.activity_level }}</p>
+        <p><strong>Contact Number:</strong> {{ patient.contact_number }}</p>
+        <p><strong>BMR:</strong> {{ patient.bmr }} kcal</p>
+        <p><strong>Daily Calories:</strong> {{ patient.daily_calories }} kcal</p>
+
+        <!-- Edit and Delete Buttons -->
+        <div class="actions">
+            <a href="{% url 'patients:patient_update' patient.id %}" class="btn">Edit</a>
+            <form method="post" action="{% url 'patients:patient_delete' patient.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+
+    </div>
+</body>
+</html>

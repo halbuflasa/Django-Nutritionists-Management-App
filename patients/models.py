@@ -21,7 +21,7 @@ class PatientProfile(models.Model):
     weight = models.FloatField()
     height = models.FloatField()
     activity_level = models.CharField(max_length=20, choices=ACTIVITY_LEVEL_CHOICES)
-    contact_number = models.CharField(max_length=15, null=True, blank=True)  # New Field
+    contact_number = models.CharField(max_length=15, null=True, blank=True)
     bmr = models.FloatField(null=True, blank=True)
     daily_calories = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
