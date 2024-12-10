@@ -34,13 +34,14 @@
 
         <!-- Edit and Delete Buttons -->
         <div class="actions">
-            <a href="{% url 'patients:patient_update' patient.id %}" class="btn">Edit</a>
-            <form method="post" action="{% url 'patients:patient_delete' patient.id %}" style="display: inline;">
+            <a href="{% url 'patients:patient_update' patient.id %}" class="btn btn-primary">Edit</a>
+            <form method="post" action="{% url 'patients:patient_delete' patient.id %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
-
+        
+        
     </div>
 </body>
 </html>

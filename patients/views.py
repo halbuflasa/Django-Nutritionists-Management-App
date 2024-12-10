@@ -44,7 +44,6 @@ def patient_update(request, pk):
     else:
         form = PatientForm(instance=patient)
     return render(request, 'patients/patient_profile_create.html', {'form': form})
-
 # Delete a patient
 @login_required
 def patient_delete(request, pk):

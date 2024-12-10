@@ -8,25 +8,18 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav>
         <div>Welcome, {{ request.user.username }}</div>
         <div>
             <a href="{% url 'dashboard' %}">Dashboard</a>
             <a href="{% url 'patients:patient_profiles_list' %}">Patient Profile List</a>
-            <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="logout">Logout</button>
-            </form>
         </div>
     </nav>
-
-    <!-- Content Container -->
     <div class="container">
         <h2>{{ form.instance.pk|yesno:"Update Patient Profile,Create Patient Profile" }}</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }} <!-- Django renders all form fields with labels and input elements -->
+            {{ form.as_p }}
             <button type="submit" class="btn">
                 {{ form.instance.pk|yesno:"Update,Create" }}
             </button>
@@ -34,8 +27,3 @@
     </div>
 </body>
 </html>
-
-
-
-
-
