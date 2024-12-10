@@ -33,8 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'users',
     'patients',
-    'meals',
-    'deliveries',
+   
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -137,3 +136,4 @@ LOGIN_URL = '/users/login/'  # The login page URL
 # URL to redirect after successful login
 LOGIN_REDIRECT_URL = '/users/dashboard/'  # Redirect to the dashboard or desired page after login
 LOGOUT_REDIRECT_URL = '/users/login/'  # Redirect to the login page after logout
+STATIC_URL = '/static/'

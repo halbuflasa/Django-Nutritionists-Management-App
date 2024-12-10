@@ -1,0 +1,163 @@
+/* General Reset */
+html, body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Navbar */
+nav {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+nav div:first-child {
+    margin-left: 20px;
+    flex: 1;
+    text-align: left;
+}
+
+nav div:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+nav form {
+    margin: 0;
+}
+
+.logout {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: background-color 0.3s;
+}
+
+.logout:hover {
+    text-decoration: underline;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+/* Container */
+.container {
+    max-width: 800px;
+    width: 90%;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: auto;
+    margin-top: 80px; /* Ensure it's below the navbar */
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow scrolling within the container */
+}
+
+/* Headings */
+h1, h2 {
+    color: #333;
+    text-align: center;
+}
+
+/* Forms */
+form {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+form label {
+    font-weight: bold;
+    color: #555;
+}
+
+form input, form select, form button {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%; /* Make inputs responsive */
+    box-sizing: border-box;
+}
+
+form button {
+    grid-column: span 2;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Cards */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: left;
+    padding: 20px;
+    position: relative;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #007BFF;
+    cursor: pointer;
+}
+
+.card h3 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card h3 a:hover {
+    text-decoration: underline;
+}
+
+.card p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #333;
+}

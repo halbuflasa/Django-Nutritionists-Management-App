@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
-    <h1>Welcome, {{ request.user.username }}</h1>
-    <p>You are logged in as a Nutritionist.</p>
+    <div class="dashboard-container">
+        <h1>Welcome, {{ request.user.username }}</h1>
+        <p>You are logged in as a Nutritionist.</p>
 
-    <!-- Navigation to Patients App -->
-    <h2>Manage Patients</h2>
-    <ul>
-        <li><a href="{% url 'patients:patient_profiles_list' %}">Show Patient Profiles</a></li>
-        <li><a href="{% url 'patients:patient_profile_create' %}">Create Patient Profile</a></li>
-    </ul>
+        <!-- Navigation to Patients List -->
+        <div class="card">
+            <h2>Manage Patients</h2>
+            <ul>
+                <li><a href="{% url 'patients:patient_profiles_list' %}">View Patient Profiles</a></li>
+                <li><a href="{% url 'patients:patient_profile_create' %}">Add New Patient</a></li>
+            </ul>
+        </div>
 
-    <!-- Logout Button -->
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
+        <!-- Logout Button -->
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
 </body>
 </html>
