@@ -4,54 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ form.instance.pk|yesno:"Edit Dish,Add Dish" }}</title>
+    <style>
+        /* General Reset */
+        html, body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Navbar */
+        nav {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        nav div:first-child {
+            margin-left: 20px;
+            flex: 1;
+            text-align: left;
+        }
+
+        nav div:last-child {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        nav form {
+            margin: 0;
+        }
+
+        .logout {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+
+        .logout:hover {
+            text-decoration: underline;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin: auto;
+            margin-top: 80px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #007BFF;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select, textarea, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        img {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ form.instance.pk|yesno:"Edit Dish,Add Dish" }}</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <!-- Render other fields -->
-        {{ form.name.label }}: {{ form.name }}
-        <br>
-        {{ form.description.label }}: {{ form.description }}
-        <br>
-        {{ form.recipe.label }}: {{ form.recipe }}
-        <br>
-        {{ form.ingredients.label }}: {{ form.ingredients }}
-        <br>
-        {{ form.image.label }}: {{ form.image }}
-        <br>
-        {{ form.diet_plan.label }}: {{ form.diet_plan }}
-        <br>
-        {{ form.calories.label }}: {{ form.calories }}
-        <br>
-        {{ form.protein.label }}: {{ form.protein }}
-        <br>
-        {{ form.carbs.label }}: {{ form.carbs }}
-        <br>
-        {{ form.fat.label }}: {{ form.fat }}
-        <br>
-        {{ form.portion_size.label }}: {{ form.portion_size }}
-        <br>
-        
-        <!-- Custom rendering for the allergens field -->
-        <p><strong>{{ form.allergens.label }}</strong></p>
-        <ul>
-            {% for allergen in form.allergens.field.queryset %}
-            <li>
-                <label>
-                    <input type="checkbox" name="allergens" value="{{ allergen.pk }}" 
-                    {% if allergen in form.allergens.value %}checked{% endif %}>
-                    {% if allergen.icon %}
-                    <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" style="width:20px; height:20px; vertical-align:middle; margin-right:5px;">
-                    {% endif %}
-                    {{ allergen.name }}
-                </label>
-            </li>
-            {% endfor %}
-        </ul>
+    <nav>
+        <div>Welcome, {{ request.user.username }}</div>
+        <div>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'dishes:dishes_list' %}">Dishes List</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout">Logout</button>
+            </form>
+        </div>
+    </nav>
 
-        <button type="submit">{{ form.instance.pk|yesno:"Update,Create" }}</button>
-    </form>
+    <div class="container">
+        <h1>{{ form.instance.pk|yesno:"Edit Dish,Add Dish" }}</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Name -->
+            <label>{{ form.name.label }}</label>
+            {{ form.name }}
+        
+            <!-- Description -->
+            <label>{{ form.description.label }}</label>
+            {{ form.description }}
+        
+            <!-- Recipe -->
+            <label>{{ form.recipe.label }}</label>
+            {{ form.recipe }}
+        
+            <!-- Ingredients -->
+            <label>{{ form.ingredients.label }}</label>
+            {{ form.ingredients }}
+        
+            <!-- Image -->
+            <label>{{ form.image.label }}</label>
+            {% if form.instance.image %}
+                <img src="{{ form.instance.image.url }}" alt="Current Image" style="width:150px; height:auto; margin-bottom:10px;">
+            {% endif %}
+            {{ form.image }}
+        
+            <!-- Diet Plan -->
+            <label>{{ form.diet_plan.label }}</label>
+            {{ form.diet_plan }}
+        
+            <!-- Nutrition Info -->
+            <label>{{ form.calories.label }}</label>
+            {{ form.calories }}
+            <label>{{ form.protein.label }}</label>
+            {{ form.protein }}
+            <label>{{ form.carbs.label }}</label>
+            {{ form.carbs }}
+            <label>{{ form.fat.label }}</label>
+            {{ form.fat }}
+            <label>{{ form.portion_size.label }}</label>
+            {{ form.portion_size }}
+        
+            <!-- Allergens -->
+            <p><strong>{{ form.allergens.label }}</strong></p>
+            {{ form.allergens }}
+        
+            <!-- Submit Button -->
+            <button type="submit">{{ form.instance.pk|yesno:"Update,Create" }}</button>
+        </form>
+        
+    </div>
 </body>
 </html>

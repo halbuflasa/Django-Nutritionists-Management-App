@@ -20,7 +20,14 @@
                 <li><a href="{% url 'patients:patient_create' %}">Add New Patient</a></li>
             </ul>
         </div>
-
+        <!-- Manage Dishes -->
+        <div class="card">
+            <h2>Manage Dishes</h2>
+            <ul>
+                <li><a href="{% url 'dishes:dishes_list' %}">View Dishes</a></li>
+                <li><a href="{% url 'dishes:add_dish' %}">Add New Dish</a></li>
+            </ul>
+        </div>
         <!-- Logout Button -->
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}

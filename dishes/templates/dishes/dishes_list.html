@@ -3,25 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dishes List</title>
+    {% load static %}
+    <style>
+        /* General Reset */
+        html, body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Navbar */
+        nav {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        nav div:first-child {
+            margin-left: 20px;
+            flex: 1;
+            text-align: left;
+        }
+
+        nav div:last-child {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        nav form {
+            margin: 0;
+        }
+
+        .logout {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+
+        .logout:hover {
+            text-decoration: underline;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            width: 90%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin: auto;
+            margin-top: 80px;
+            box-sizing: border-box;
+        }
+
+        /* Headings */
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        /* Cards */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #007BFF;
+            cursor: pointer;
+        }
+
+        .card h3 a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card h3 a:hover {
+            text-decoration: underline;
+        }
+
+        .card p {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .nutrition-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .nutrition-info div {
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            padding: 5px 10px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .allergens img {
+            width: 30px;
+            height: 30px;
+            margin: 5px;
+            vertical-align: middle;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Dishes</h1>
-    <a href="{% url 'add_dish' %}">Add New Dish</a>
-    <div class="dishes-container">
-        {% for dish in dishes %}
-        <div class="dish-card">
-            <img src="{{ dish.image.url }}" alt="{{ dish.name }}" style="width:200px; height:auto;">
-            <h2>{{ dish.name }}</h2>
-            <p>{{ dish.description }}</p>
-            <p>Calories: {{ dish.calories }}</p>
-            <p>Protein: {{ dish.protein }}g</p>
-            <p>Carbs: {{ dish.carbs }}g</p>
-            <p>Fat: {{ dish.fat }}g</p>
-            <a href="{% url 'dish_detail' dish.id %}">View Details</a>
+    <nav>
+        <div>Welcome, {{ request.user.username }}</div>
+        <div>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'dishes:add_dish' %}">Add New Dish</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout">Logout</button>
+            </form>
         </div>
-        {% endfor %}
+    </nav>
+
+    <div class="container">
+        <h1>Dishes List</h1>
+        <div class="cards-container">
+            {% for dish in dishes %}
+            <div class="card">
+                <h3>{{ dish.name }}</h3>
+                <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+                <p>{{ dish.description }}</p>
+                <div class="nutrition-info">
+                    <div>Calories: {{ dish.calories }}</div>
+                    <div>Protein: {{ dish.protein }}g</div>
+                    <div>Carbs: {{ dish.carbs }}g</div>
+                    <div>Fat: {{ dish.fat }}g</div>
+                </div>
+                <p><strong>Allergens:</strong></p>
+                <div class="allergens">
+                    {% for allergen in dish.allergens.all %}
+                    <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" title="{{ allergen.name }}">
+                    {% empty %}
+                    <span>No allergens</span>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'dishes:dish_detail' dish.id %}" class="btn">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-    
 </body>
 </html>

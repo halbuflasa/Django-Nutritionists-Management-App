@@ -19,6 +19,8 @@ urlpatterns = [
 
     # Include dishes app URLs for managing dishes
     path('dishes/', include('dishes.urls')),
+
+  
 ]
 
 # Add this line to serve media files during development

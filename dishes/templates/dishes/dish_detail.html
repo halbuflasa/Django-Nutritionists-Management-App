@@ -4,38 +4,203 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ dish.name }}</title>
+    <style>
+        /* General Reset */
+        html, body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Navbar */
+        nav {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        nav div:first-child {
+            margin-left: 20px;
+            flex: 1;
+            text-align: left;
+        }
+
+        nav div:last-child {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        nav form {
+            margin: 0;
+        }
+
+        .logout {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+
+        .logout:hover {
+            text-decoration: underline;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin: auto;
+            margin-top: 80px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            font-size: 1em;
+            margin: 10px 0;
+            color: #555;
+            text-align: left;
+        }
+
+        p strong {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .allergens {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .allergens img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ dish.name }}</h1>
-    <img src="{{ dish.image.url }}" alt="{{ dish.name }}" style="width:300px; height:auto;">
-    <p>{{ dish.description }}</p>
-    
-    <p><strong>Calories:</strong> {{ dish.calories }} kcal</p>
-    <p><strong>Protein:</strong> {{ dish.protein }}g</p>
-    <p><strong>Carbs:</strong> {{ dish.carbs }}g</p>
-    <p><strong>Fat:</strong> {{ dish.fat }}g</p>
-    <p><strong>Portion Size:</strong> {{ dish.portion_size }}g</p>
-    <p><strong>Diet Plan:</strong> {{ dish.get_diet_plan_display }}</p>
-    
-    <p><strong>Recipe:</strong> {{ dish.recipe }}</p>
-    <p><strong>Ingredients:</strong> {{ dish.ingredients }}</p>
-    
-    <p><strong>Allergens:</strong>
-        {% for allergen in dish.allergens.all %}
-        <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" title="{{ allergen.name }}" style="width:20px; height:20px; margin-right:5px;">
-        <span>{{ allergen.name }}</span>
-        {% empty %}
-        <span>No allergens</span>
-        {% endfor %}
-    </p>
-    
+    <nav>
+        <div>Welcome, {{ request.user.username }}</div>
+        <div>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'dishes:add_dish' %}">Add New Dish</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout">Logout</button>
+            </form>
+        </div>
+    </nav>
 
-    <a href="{% url 'update_dish' dish.id %}" class="btn">Edit</a>
-    <form method="post" action="{% url 'delete_dish' dish.id %}" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
+    <div class="container">
+        <h1>{{ dish.name }}</h1>
+        <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+        <p>{{ dish.description }}</p>
 
-    <a href="{% url 'dishes_list' %}" class="btn">Back to Dishes</a>
+        <p><strong>Calories:</strong> {{ dish.calories }} kcal</p>
+        <p><strong>Protein:</strong> {{ dish.protein }}g</p>
+        <p><strong>Carbs:</strong> {{ dish.carbs }}g</p>
+        <p><strong>Fat:</strong> {{ dish.fat }}g</p>
+        <p><strong>Portion Size:</strong> {{ dish.portion_size }}g</p>
+        <p><strong>Diet Plan:</strong> {{ dish.get_diet_plan_display }}</p>
+        <p><strong>Recipe:</strong> {{ dish.recipe }}</p>
+        <p><strong>Ingredients:</strong> {{ dish.ingredients }}</p>
+
+        <p><strong>Allergens:</strong></p>
+        <div class="allergens">
+            {% for allergen in dish.allergens.all %}
+            <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" title="{{ allergen.name }}">
+            {% empty %}
+            <span>No allergens</span>
+            {% endfor %}
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'dishes:update_dish' dish.id %}" class="btn">Edit</a>
+            <form method="post" action="{% url 'dishes:delete_dish' dish.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            <a href="{% url 'dishes:dishes_list' %}" class="btn">Back to Dishes</a>
+        </div>
+    </div>
 </body>
 </html>
