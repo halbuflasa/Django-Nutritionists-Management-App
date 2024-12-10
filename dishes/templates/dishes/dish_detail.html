@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ dish.name }}</title>
+</head>
+<body>
+    <h1>{{ dish.name }}</h1>
+    <img src="{{ dish.image.url }}" alt="{{ dish.name }}" style="width:300px; height:auto;">
+    <p>{{ dish.description }}</p>
+    
+    <p><strong>Calories:</strong> {{ dish.calories }} kcal</p>
+    <p><strong>Protein:</strong> {{ dish.protein }}g</p>
+    <p><strong>Carbs:</strong> {{ dish.carbs }}g</p>
+    <p><strong>Fat:</strong> {{ dish.fat }}g</p>
+    <p><strong>Portion Size:</strong> {{ dish.portion_size }}g</p>
+    <p><strong>Diet Plan:</strong> {{ dish.get_diet_plan_display }}</p>
+    
+    <p><strong>Recipe:</strong> {{ dish.recipe }}</p>
+    <p><strong>Ingredients:</strong> {{ dish.ingredients }}</p>
+    
+    <p><strong>Allergens:</strong>
+        {% for allergen in dish.allergens.all %}
+        <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" title="{{ allergen.name }}" style="width:20px; height:20px; margin-right:5px;">
+        <span>{{ allergen.name }}</span>
+        {% empty %}
+        <span>No allergens</span>
+        {% endfor %}
+    </p>
+    
+
+    <a href="{% url 'update_dish' dish.id %}" class="btn">Edit</a>
+    <form method="post" action="{% url 'delete_dish' dish.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+
+    <a href="{% url 'dishes_list' %}" class="btn">Back to Dishes</a>
+</body>
+</html>

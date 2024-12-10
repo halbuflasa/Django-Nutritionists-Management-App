@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Dishes</h1>
+    <a href="{% url 'add_dish' %}">Add New Dish</a>
+    <div class="dishes-container">
+        {% for dish in dishes %}
+        <div class="dish-card">
+            <img src="{{ dish.image.url }}" alt="{{ dish.name }}" style="width:200px; height:auto;">
+            <h2>{{ dish.name }}</h2>
+            <p>{{ dish.description }}</p>
+            <p>Calories: {{ dish.calories }}</p>
+            <p>Protein: {{ dish.protein }}g</p>
+            <p>Carbs: {{ dish.carbs }}g</p>
+            <p>Fat: {{ dish.fat }}g</p>
+            <a href="{% url 'dish_detail' dish.id %}">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+    
+</body>
+</html>

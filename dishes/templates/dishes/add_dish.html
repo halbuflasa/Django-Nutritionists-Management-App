@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ form.instance.pk|yesno:"Edit Dish,Add Dish" }}</title>
+</head>
+<body>
+    <h1>{{ form.instance.pk|yesno:"Edit Dish,Add Dish" }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Render other fields -->
+        {{ form.name.label }}: {{ form.name }}
+        <br>
+        {{ form.description.label }}: {{ form.description }}
+        <br>
+        {{ form.recipe.label }}: {{ form.recipe }}
+        <br>
+        {{ form.ingredients.label }}: {{ form.ingredients }}
+        <br>
+        {{ form.image.label }}: {{ form.image }}
+        <br>
+        {{ form.diet_plan.label }}: {{ form.diet_plan }}
+        <br>
+        {{ form.calories.label }}: {{ form.calories }}
+        <br>
+        {{ form.protein.label }}: {{ form.protein }}
+        <br>
+        {{ form.carbs.label }}: {{ form.carbs }}
+        <br>
+        {{ form.fat.label }}: {{ form.fat }}
+        <br>
+        {{ form.portion_size.label }}: {{ form.portion_size }}
+        <br>
+        
+        <!-- Custom rendering for the allergens field -->
+        <p><strong>{{ form.allergens.label }}</strong></p>
+        <ul>
+            {% for allergen in form.allergens.field.queryset %}
+            <li>
+                <label>
+                    <input type="checkbox" name="allergens" value="{{ allergen.pk }}" 
+                    {% if allergen in form.allergens.value %}checked{% endif %}>
+                    {% if allergen.icon %}
+                    <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" style="width:20px; height:20px; vertical-align:middle; margin-right:5px;">
+                    {% endif %}
+                    {{ allergen.name }}
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <button type="submit">{{ form.instance.pk|yesno:"Update,Create" }}</button>
+    </form>
+</body>
+</html>
