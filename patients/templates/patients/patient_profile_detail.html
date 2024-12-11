@@ -144,13 +144,12 @@
 
         <!-- Patient Menu Calendar -->
         <div class="calendar-header">
-            <h3>{{ year }} - {{ month|date:"F" }}</h3>
+            <h3>{{ year }} - {{ month_name }}</h3>
             <div>
                 <a href="?year={{ year }}&month={{ month|add:'-1' }}" class="btn btn-secondary">Previous Month</a>
                 <a href="?year={{ year }}&month={{ month|add:'1' }}" class="btn btn-secondary">Next Month</a>
             </div>
-        </div>
-
+        </div>              
         <table class="table table-bordered">
             <thead class="table-light">
                 <tr>
