@@ -1,1 +1,1 @@
-WSGI_APPLICATION = 'nutritionists-management.wsgi.application'
+web: gunicorn nutritionists_management.wsgi
