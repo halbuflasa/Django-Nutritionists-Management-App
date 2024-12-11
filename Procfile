@@ -1,1 +1,1 @@
-web: gunicorn Nutritionists-Management-App.wsgi
+web: gunicorn nutritionists-management-app.wsgi
