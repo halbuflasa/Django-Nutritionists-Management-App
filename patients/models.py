@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from dishes.models import Dish
 
 class PatientProfile(models.Model):
     GENDER_CHOICES = [
@@ -45,3 +46,14 @@ class PatientProfile(models.Model):
 
     def __str__(self):
         return self.name
+
+class PatientMenuItem(models.Model):
+    patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE, related_name='menu_items')
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='patient_assignments')
+    date = models.DateField('Menu date')
+
+    class Meta:
+        ordering = ['date']
+
+    def __str__(self):
+        return f"{self.dish.name} on {self.date}"

@@ -161,3 +161,7 @@ form button:hover {
     font-size: 14px;
     color: #333;
 }
+
+.other-month {
+    background-color: #eee;
+}
