@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'nutritionists_management.urls'
+ROOT_URLCONF = 'nutritionists-management-app.urls'
 
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'nutritionists_management.wsgi.application'
+WSGI_APPLICATION = 'nutritionists-management-app.wsgi.application'
 
 
 # Database
