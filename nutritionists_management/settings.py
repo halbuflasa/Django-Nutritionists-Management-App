@@ -11,22 +11,26 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+import dj_database_url
+
+# Load environment variables from a .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vtsvteu04%q9^js()@97j+-*&(@7kgu=(-ivww)3nr@n#0w$7a'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if 'ON_HEROKU' in os.environ:
+    DEBUG = False  # Turn off debugging in production (Heroku)
+else:
+    DEBUG = os.getenv('DEBUG', 'True') == 'True'  # Keep it True for local development
 
-ALLOWED_HOSTS = []
-
+# Other settings (SECRET_KEY, ALLOWED_HOSTS, etc.)
+SECRET_KEY = os.getenv('SECRET_KEY')
+ALLOWED_HOSTS = ["*"]  # Example
 
 # Application definition
 
@@ -34,8 +38,6 @@ INSTALLED_APPS = [
     'users',
     'patients',
     'dishes',
-
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,13 +81,26 @@ WSGI_APPLICATION = 'nutritionists_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if 'ON_HEROKU' in os.environ:
+    DATABASES = {
+        "default": dj_database_url.config(
+            env='DATABASE_URL',
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        ),
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'nutritionists_management',  # Replace this with your local database name
+            'USER': 'hessa',
+            'PASSWORD': '123',
+            'HOST': '127.0.0.1',  # Usually 'localhost' or '127.0.0.1' for local
+            'PORT': '5432',  # Default PostgreSQL port
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -104,7 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -116,17 +131,16 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles" 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 # Use custom User model
 AUTH_USER_MODEL = 'users.User'
@@ -137,7 +151,8 @@ LOGIN_URL = '/users/login/'  # The login page URL
 # URL to redirect after successful login
 LOGIN_REDIRECT_URL = '/users/dashboard/'  # Redirect to the dashboard or desired page after login
 LOGOUT_REDIRECT_URL = '/users/login/'  # Redirect to the login page after logout
-STATIC_URL = '/static/'
+
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
