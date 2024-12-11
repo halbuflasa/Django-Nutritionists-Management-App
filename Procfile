@@ -1,1 +1,1 @@
-WSGI_APPLICATION = 'nutritionists-management-app.wsgi.application'
+WSGI_APPLICATION = 'nutritionists_management.wsgi.application'
