@@ -17,25 +17,50 @@
             z-index: 1050;
         }
         .dish-card {
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow: hidden;
-            background-color: #f9f9f9;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: #f9f9f9;
+        text-align: center;
+        width: 200px; /* Set a fixed width */
+        height: 280px; /* Set a fixed height */
+        display: inline-block; /* Ensure proper alignment */
         }
+
         .dish-card:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
         .dish-card.selected {
             border: 2px solid #007BFF;
             background-color: #e7f1ff;
         }
+
         .dish-card img {
             width: 100%;
-            height: 150px;
-            object-fit: cover;
+            height: 150px; /* Ensure consistent image height */
+            object-fit: cover; /* Ensures the image fills the container */
+            border-bottom: 1px solid #ddd; /* Add separation between image and text */
+        }
+
+        .dish-details {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .dish-details h6 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .dish-details p {
+            font-size: 14px;
+            color: #555;
+            margin: 0;
         }
         .patient-details {
             margin-bottom: 2rem;
@@ -72,6 +97,57 @@
             margin-top: 0.5rem;
             font-size: 0.9rem;
             padding: 0.5rem;
+        }
+
+        .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 0.5rem 0;
+        }
+
+        .calendar-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .table-bordered th, .table-bordered td {
+            text-align: center;
+            vertical-align: top;
+            position: relative;
+        }
+
+        .current-day {
+            background-color: #e7f1ff;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+        }
+
+        .day-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dish-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-size: 0.85rem;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 0.25rem;
+        }
+
+        .add-dish-btn {
+            margin-top: 5px;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
         }
 
         @media (max-width: 768px) {
@@ -144,14 +220,13 @@
 
         <!-- Patient Menu Calendar -->
         <div class="calendar-header">
+            <button class="btn btn-sm btn-secondary" onclick="navigateMonth(-1)">&#x276E; Previous</button>
             <h3>{{ year }} - {{ month_name }}</h3>
-            <div>
-                <a href="?year={{ year }}&month={{ month|add:'-1' }}" class="btn btn-secondary">Previous Month</a>
-                <a href="?year={{ year }}&month={{ month|add:'1' }}" class="btn btn-secondary">Next Month</a>
-            </div>
-        </div>              
+            <button class="btn btn-sm btn-secondary" onclick="navigateMonth(1)">Next &#x276F;</button>
+        </div>
+        
         <table class="table table-bordered">
-            <thead class="table-light">
+            <thead>
                 <tr>
                     <th>Sun</th>
                     <th>Mon</th>
@@ -166,35 +241,33 @@
                 {% for week in weeks %}
                 <tr>
                     {% for day in week %}
-                    <td class="{% if day.month != month %}other-month{% endif %}">
-                        <div><strong>{{ day.day }}</strong></div>
-                        {% if day.month == month %}
-                            {% if day in menu_dict %}
-                                <ul>
+                    <td class="{% if day == today %}current-day{% endif %}">
+                        <div class="day-content">
+                            <strong>{{ day.day }}</strong>
+                            {% if day.month == month %}
+                                {% if day in menu_dict %}
                                     {% for dish, menu_item_id in menu_dict|get_item:day %}
-                                        <li>
-                                            <a href="{% url 'dishes:dish_detail' dish.id %}" target="_blank">{{ dish.name }}</a>
-                                            <br>
-                                            <small>{{ dish.calories }} kcal, Prot:{{ dish.protein }}g, Carbs:{{ dish.carbs }}g, Fat:{{ dish.fat }}g</small>
-                                            <form method="post" action="{% url 'patients:remove_menu_item' patient.id menu_item_id %}" style="display:inline;">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                                            </form>
-                                        </li>
+                                    <div class="dish-entry">
+                                        <span>{{ dish.name }}</span>
+                                        <form method="post" action="{% url 'patients:remove_menu_item' patient.id menu_item_id %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger">&#x2716;</button>
+                                        </form>
+                                    </div>
                                     {% endfor %}
-                                </ul>
+                                {% endif %}
+                                <button class="btn btn-sm btn-success add-dish-btn" data-date="{{ day|date:'Y-m-d' }}">+ Add Dish</button>
                             {% endif %}
-                            <button class="btn btn-sm btn-success add-dish-btn" data-date="{{ day|date:'Y-m-d' }}">Add Dish</button>
-                        {% endif %}
+                        </div>
                     </td>
                     {% endfor %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
 
-    <!-- Modal for Adding Dish -->
     <div id="addDishModal" class="modal fade" tabindex="-1" aria-labelledby="addDishModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -204,19 +277,17 @@
                 </div>
                 <div class="modal-body">
                     <p>Select a dish to add:</p>
-                    <div class="row">
+                    <div class="d-flex flex-wrap justify-content-start gap-3">
                         {% for dish in dishes %}
-                        <div class="col-md-3 mb-3">
-                            <div class="card dish-card" data-dish-id="{{ dish.id }}">
-                                {% if dish.image %}
-                                <img src="{{ dish.image.url }}" class="card-img-top" alt="{{ dish.name }}">
-                                {% else %}
-                                <img src="{% static 'images/no_image_available.png' %}" class="card-img-top" alt="No image">
-                                {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ dish.name }}</h5>
-                                    <p class="card-text">Cal: {{ dish.calories }}, Prot: {{ dish.protein }}g</p>
-                                </div>
+                        <div class="dish-card" data-dish-id="{{ dish.id }}">
+                            {% if dish.image %}
+                            <img src="{{ dish.image.url }}" alt="{{ dish.name }}" class="img-fluid">
+                            {% else %}
+                            <img src="{% static 'images/no_image_available.png' %}" alt="No image available" class="img-fluid">
+                            {% endif %}
+                            <div class="dish-details mt-2 text-center">
+                                <h6 class="dish-name">{{ dish.name }}</h6>
+                                <p>Cal: {{ dish.calories }}, Prot: {{ dish.protein }}g</p>
                             </div>
                         </div>
                         {% endfor %}
@@ -234,13 +305,14 @@
             </div>
         </div>
     </div>
+    
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Initialize Modal
         const addDishModal = new bootstrap.Modal(document.getElementById('addDishModal'));
-
+    
         // Open Modal
         document.querySelectorAll('.add-dish-btn').forEach(button => {
             button.addEventListener('click', function () {
@@ -251,7 +323,7 @@
                 addDishModal.show();
             });
         });
-
+    
         // Select Dish
         document.querySelectorAll('.dish-card').forEach(card => {
             card.addEventListener('click', function () {
@@ -260,7 +332,7 @@
                 document.getElementById('selectedDishId').value = this.getAttribute('data-dish-id');
             });
         });
-
+    
         // Validate Dish Selection
         function validateDishSelection() {
             const selectedDishId = document.getElementById('selectedDishId').value;
@@ -270,6 +342,27 @@
             }
             return true;
         }
+    
+        // Navigate months
+        function navigateMonth(direction) {
+            // Safely parse year and month from Django template variables
+            const currentYear = parseInt("{{ year }}", 10);
+            const currentMonth = parseInt("{{ month }}", 10);
+    
+            if (isNaN(currentYear) || isNaN(currentMonth)) {
+                console.error("Invalid year or month provided by Django.");
+                return;
+            }
+    
+            // Calculate new date
+            const newDate = new Date(currentYear, currentMonth - 1 + direction, 1);
+            const newYear = newDate.getFullYear();
+            const newMonth = newDate.getMonth() + 1;
+    
+            // Redirect with the updated query parameters
+            window.location.href = `?year=${newYear}&month=${newMonth}`;
+        }
     </script>
+    
 </body>
 </html>
