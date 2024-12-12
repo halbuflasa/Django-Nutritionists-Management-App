@@ -16,29 +16,38 @@ You can view the deployed website here: [Nutritionists Management System](https:
 
 ## Screenshot
 
-### Add Dish Form
-![Add Dish Form](assets/screenshots/addDishform.png)
+### Login
+![Login](assets/screenshots/login.png)
 
-### Create Patient
-![Create Patient](assets/screenshots/createpatient.png)
 
 ### Dashboard
 ![Dashboard](assets/screenshots/dashboard.png)
 
-### Dishes Details
-![Dishes Details](assets/screenshots/dishesdetails.png)
+
+### Add Dish Form
+![Add Dish Form](assets/screenshots/addDishform.png)
 
 ### Dishes List
 ![Dishes List](assets/screenshots/disheslist.png)
 
-### Login
-![Login](assets/screenshots/login.png)
+### Dishes Details
+![Dishes Details](assets/screenshots/dishesdetails.png)
 
+
+
+
+### Create Patient
+![Create Patient](assets/screenshots/createpatient.png)
+### Patients List
+![Patients List](assets/screenshots/patientslist.png)
 ### Patient Details
 ![Patient Details](assets/screenshots/patientDetails.png)
 
-### Patients List
-![Patients List](assets/screenshots/patientslist.png)
+
+
+
+
+
 
 
 ---
