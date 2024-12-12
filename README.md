@@ -2,7 +2,7 @@
 
 ## Project Description
 
-The Django Nutritionists Management System is a health management platform designed specifically for nutritionists. It provides a streamlined process for managing patient profiles, meal plans, and dishes while maintaining role-based authorization. The system allows admins to manage users and nutritionists to create tailored meal plans for patients, auto-generate menus from a main template, and manage dishes with detailed nutritional and allergen information.
+The Django Nutritionists Management System is a health management platform designed specifically for nutritionists. It provides a streamlined process for managing patient profiles, meal plans, and dishes while maintaining role-based authorization. The system allows admins to manage users and nutritionists to create tailored meal plans for patients, and manage dishes with detailed nutritional and allergen information.
 
 This application aims to simplify the workflow for nutritionists, enabling efficient and accurate meal planning.
 
