@@ -96,7 +96,6 @@ password: r6c9hGX6tXhXVPt
 ## Attributions
 
 - [Bootstrap](https://getbootstrap.com/) for responsive styling.
-- Icons and images used in dishes are placeholders or uploaded directly by users.
 
 ---
 
