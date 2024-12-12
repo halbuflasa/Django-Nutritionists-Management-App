@@ -12,6 +12,9 @@ This application aims to simplify the workflow for nutritionists, enabling effic
 
 You can view the deployed website here: [Nutritionists Management System](https://nutritionists-management-4aeed42d3024.herokuapp.com/users/login/)
 
+username: test
+password: r6c9hGX6tXhXVPt
+
 ---
 
 ## Screenshot
