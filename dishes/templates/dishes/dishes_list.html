@@ -147,25 +147,19 @@
 
         .nutrition-info {
             display: flex;
-            justify-content: space-between;
-            gap: 10px;
+            flex-direction: column;
+            gap: 5px;
             font-size: 14px;
             margin-top: 10px;
+            text-align: left;
+            width: 100%;
         }
 
         .nutrition-info div {
             background-color: #f0f0f0;
             border-radius: 5px;
             padding: 5px 10px;
-            flex: 1;
-            text-align: center;
-        }
-
-        .allergens img {
-            width: 30px;
-            height: 30px;
-            margin: 5px;
-            vertical-align: middle;
+            text-align: left;
         }
 
         .btn {
@@ -195,7 +189,6 @@
             </form>
         </div>
     </nav>
-
     <div class="container">
         <h1>Dishes List</h1>
         <div class="cards-container">
@@ -205,23 +198,34 @@
                 <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
                 <p>{{ dish.description }}</p>
                 <div class="nutrition-info">
-                    <div>Calories: {{ dish.calories }}</div>
-                    <div>Protein: {{ dish.protein }}g</div>
-                    <div>Carbs: {{ dish.carbs }}g</div>
-                    <div>Fat: {{ dish.fat }}g</div>
+                    <div><strong>Calories:</strong> {{ dish.nutrition_infos.all.0.calories }}</div>
+                    <div><strong>Protein:</strong> {{ dish.nutrition_infos.all.0.protein }}g</div>
+                    <div><strong>Carbs:</strong> {{ dish.nutrition_infos.all.0.carbs }}g</div>
+                    <div><strong>Fat:</strong> {{ dish.nutrition_infos.all.0.fat }}g</div>
                 </div>
-                <p><strong>Allergens:</strong></p>
+                
+                <!-- Allergens Section -->
                 <div class="allergens">
-                    {% for allergen in dish.allergens.all %}
-                    <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" title="{{ allergen.name }}">
-                    {% empty %}
-                    <span>No allergens</span>
-                    {% endfor %}
+                    <strong>Allergens:</strong>
+                    {% if dish.allergens.exists %}
+                        <ul style="list-style: none; padding: 0;">
+                            {% for allergen in dish.allergens.all %}
+                            <li style="display: flex; align-items: center; margin-top: 5px;">
+                                <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" style="width: 20px; height: 20px; margin-right: 10px;">
+                                {{ allergen.name }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No allergens specified.</p>
+                    {% endif %}
                 </div>
+    
                 <a href="{% url 'dishes:dish_detail' dish.id %}" class="btn">View Details</a>
             </div>
             {% endfor %}
         </div>
     </div>
+    
 </body>
 </html>

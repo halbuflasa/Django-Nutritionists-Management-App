@@ -9,4 +9,6 @@ urlpatterns = [
     path('add/', views.add_dish, name='add_dish'),
     path('update/<int:pk>/', views.update_dish, name='update_dish'),
     path('delete/<int:pk>/', views.delete_dish, name='delete_dish'),
+    path('manage_allergens/', views.manage_allergens, name='manage_allergens'),  # New route
+   
 ]

@@ -126,20 +126,92 @@
             background-color: #0056b3;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        li {
-            margin-bottom: 10px;
+        table, th, td {
+            border: 1px solid #ddd;
         }
 
-        img {
-            width: 20px;
-            height: 20px;
+        th, td {
+            padding: 10px;
+            text-align: left;
             vertical-align: middle;
-            margin-right: 5px;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        /* Ensure input/select fields fit within the table cells */
+        select {
+            width: 100%; /* Ensure the dropdown takes the full width of the cell */
+            max-width: 100%; /* Prevent overflow */
+            padding: 8px; /* Add padding for better spacing */
+            font-size: 16px; /* Adjust font size for readability */
+            box-sizing: border-box; /* Include padding and border in width */
+            border: 1px solid #ccc; /* Add a border for styling */
+            border-radius: 4px; /* Slightly rounded corners */
+            text-overflow: ellipsis; /* Truncate long text gracefully */
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflow text */
+        }
+
+        /* Make dropdown text fully visible */
+        select:focus {
+            white-space: normal; /* Allow wrapping when dropdown is focused */
+            overflow: visible; /* Show full text on focus */
+        }
+
+        th {
+            text-align: left; /* Align text to the left */
+            font-size: 16px; /* Match font size for consistency */
+        }
+
+        td {
+            vertical-align: middle; /* Center content vertically */
+        }
+
+        .delete-row-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .delete-row-btn:hover {
+            background-color: #c82333;
+        }
+
+        .add-row-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .add-row-btn:hover {
+            background-color: #218838;
+        }
+
+        #allergen-options div {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        }
+        #allergen-options img {
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -152,6 +224,7 @@
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="logout">Logout</button>
+                
             </form>
         </div>
     </nav>
@@ -160,54 +233,113 @@
         <h1>{{ form.instance.pk|yesno:"Edit Dish,Add Dish" }}</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            
-            <!-- Name -->
+
+            <!-- Dish Details -->
             <label>{{ form.name.label }}</label>
             {{ form.name }}
-        
-            <!-- Description -->
+            
             <label>{{ form.description.label }}</label>
             {{ form.description }}
-        
-            <!-- Recipe -->
+
+            <label>{{ form.meal_type.label }}</label>
+            {{ form.meal_type }}
+
+            <label>{{ form.meal_category.label }}</label>
+            {{ form.meal_category }}
+            
             <label>{{ form.recipe.label }}</label>
             {{ form.recipe }}
-        
-            <!-- Ingredients -->
+
             <label>{{ form.ingredients.label }}</label>
             {{ form.ingredients }}
-        
-            <!-- Image -->
+
+            <label for="id_allergens">Select Allergens:</label>
+            <div id="allergen-options">
+                {% for allergen in form.fields.allergens.queryset %}
+                    <div>
+                        <input 
+                            type="checkbox" 
+                            name="allergens" 
+                            value="{{ allergen.id }}" 
+                            id="allergen_{{ allergen.id }}"
+                            {% if allergen.id in form.data.allergens %}
+                                checked
+                            {% endif %}
+                        >
+                        <label for="allergen_{{ allergen.id }}">
+                            <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" style="width: 30px; height: 30px; margin-right: 10px;">
+                            {{ allergen.name }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+
             <label>{{ form.image.label }}</label>
             {% if form.instance.image %}
                 <img src="{{ form.instance.image.url }}" alt="Current Image" style="width:150px; height:auto; margin-bottom:10px;">
             {% endif %}
             {{ form.image }}
-        
-            <!-- Diet Plan -->
-            <label>{{ form.diet_plan.label }}</label>
-            {{ form.diet_plan }}
-        
+
             <!-- Nutrition Info -->
-            <label>{{ form.calories.label }}</label>
-            {{ form.calories }}
-            <label>{{ form.protein.label }}</label>
-            {{ form.protein }}
-            <label>{{ form.carbs.label }}</label>
-            {{ form.carbs }}
-            <label>{{ form.fat.label }}</label>
-            {{ form.fat }}
-            <label>{{ form.portion_size.label }}</label>
-            {{ form.portion_size }}
-        
-            <!-- Allergens -->
-            <p><strong>{{ form.allergens.label }}</strong></p>
-            {{ form.allergens }}
-        
+            <h3>Nutrition Information</h3>
+            <table id="nutrition-table">
+                <thead>
+                    <tr>
+                        <th>Diet Plan</th>
+                        <th>Size</th>
+                        <th>Menu</th>
+                        <th>Calories</th>
+                        <th>Protein</th>
+                        <th>Carbs</th>
+                        <th>Fat</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                    <tr>
+                        <td>{{ form.diet_plan }}</td>
+                        <td>{{ form.size }}</td>
+                        <td>{{ form.menu }}</td>
+                        <td>{{ form.calories }}</td>
+                        <td>{{ form.protein }}</td>
+                        <td>{{ form.carbs }}</td>
+                        <td>{{ form.fat }}</td>
+                        <td>
+                            <button type="button" class="delete-row-btn">Delete</button>
+                            {{ form.id }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="button" class="add-row-btn" id="add-row">Add Row</button>
+
             <!-- Submit Button -->
             <button type="submit">{{ form.instance.pk|yesno:"Update,Create" }}</button>
         </form>
-        
     </div>
+
+    <script>
+        // JavaScript to add/delete rows dynamically
+        document.getElementById('add-row').addEventListener('click', function() {
+            const table = document.getElementById('nutrition-table').getElementsByTagName('tbody')[0];
+            const newRow = table.rows[table.rows.length - 1].cloneNode(true);
+            const inputs = newRow.querySelectorAll('input, select');
+            inputs.forEach(input => input.value = '');
+            table.appendChild(newRow);
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('delete-row-btn')) {
+                const row = event.target.closest('tr');
+                const table = document.getElementById('nutrition-table').getElementsByTagName('tbody')[0];
+                if (table.rows.length > 1) row.remove();
+            }
+        });
+    </script>
 </body>
 </html>

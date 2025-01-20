@@ -115,17 +115,33 @@
             color: #333;
         }
 
-        .allergens {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
+        .nutrition-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
+            text-align: left;
         }
 
-        .allergens img {
-            width: 40px;
-            height: 40px;
+        .nutrition-table th, .nutrition-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .nutrition-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .allergens-section {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .allergens-section img {
+            width: 30px;
+            height: auto;
+            margin-right: 10px;
+            vertical-align: middle;
         }
 
         .actions {
@@ -141,20 +157,28 @@
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
+            border: none; /* Remove border */
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .btn:hover {
             background-color: #0056b3;
+            transform: scale(1.05); /* Subtle hover effect */
         }
 
         .btn-danger {
             background-color: #dc3545;
+            color: white;
+            border: none; /* Remove border */
         }
 
         .btn-danger:hover {
             background-color: #c82333;
+            transform: scale(1.05); /* Subtle hover effect */
         }
+
     </style>
 </head>
 <body>
@@ -173,29 +197,64 @@
     <div class="container">
         <h1>{{ dish.name }}</h1>
         <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
-        <p>{{ dish.description }}</p>
-
-        <p><strong>Calories:</strong> {{ dish.calories }} kcal</p>
-        <p><strong>Protein:</strong> {{ dish.protein }}g</p>
-        <p><strong>Carbs:</strong> {{ dish.carbs }}g</p>
-        <p><strong>Fat:</strong> {{ dish.fat }}g</p>
-        <p><strong>Portion Size:</strong> {{ dish.portion_size }}g</p>
-        <p><strong>Diet Plan:</strong> {{ dish.get_diet_plan_display }}</p>
+        <p><strong>Description:</strong> {{ dish.description }}</p>
+        <p><strong>Meal Type:</strong> {{ dish.get_meal_type_display }}</p>
+        {% if dish.meal_category %}
+        <p><strong>Meal Category:</strong> {{ dish.get_meal_category_display }}</p>
+        {% endif %}
         <p><strong>Recipe:</strong> {{ dish.recipe }}</p>
         <p><strong>Ingredients:</strong> {{ dish.ingredients }}</p>
 
-        <p><strong>Allergens:</strong></p>
-        <div class="allergens">
-            {% for allergen in dish.allergens.all %}
-            <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" title="{{ allergen.name }}">
-            {% empty %}
-            <span>No allergens</span>
-            {% endfor %}
+        <h2>Nutrition Information</h2>
+        <table class="nutrition-table">
+            <thead>
+                <tr>
+                    <th>Diet Plan</th>
+                    <th>Size</th>
+                    <th>Menu</th>
+                    <th>Calories</th>
+                    <th>Protein (g)</th>
+                    <th>Carbs (g)</th>
+                    <th>Fat (g)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for info in nutrition_infos %}
+                <tr>
+                    <td>{{ info.get_diet_plan_display }}</td>
+                    <td>{{ info.get_size_display }}</td>
+                    <td>{{ info.get_menu_display }}</td>
+                    <td>{{ info.calories }}</td>
+                    <td>{{ info.protein }}</td>
+                    <td>{{ info.carbs }}</td>
+                    <td>{{ info.fat }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No nutrition information available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2>Allergens</h2>
+        <div class="allergens-section">
+            {% if allergens %}
+                <ul>
+                    {% for allergen in allergens %}
+                    <li>
+                        <img src="{{ allergen.icon.url }}" alt="{{ allergen.name }}" style="width: 30px; height: auto;">
+                        {{ allergen.name }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No allergens specified for this dish.</p>
+            {% endif %}
         </div>
-
+        
         <div class="actions">
             <a href="{% url 'dishes:update_dish' dish.id %}" class="btn">Edit</a>
-            <form method="post" action="{% url 'dishes:delete_dish' dish.id %}">
+            <form method="post" action="{% url 'dishes:delete_dish' dish.id %}" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
