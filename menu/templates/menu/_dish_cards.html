@@ -1,0 +1,20 @@
+{% load static %}
+<div id="dishCardsContainer">
+    {% for dish in dishes %}
+    <div class="col-md-3">
+        <div class="dish-card" data-dish-id="{{ dish.id }}">
+            {% if dish.image %}
+            <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+            {% else %}
+            <img src="{% static 'images/no_image_available.png' %}" alt="No Image Available">
+            {% endif %}
+            <h6>{{ dish.name }}</h6>
+            {% if dish.nutrition_infos.first %}
+            <p>Calories: {{ dish.nutrition_infos.first.calories }}</p>
+            {% else %}
+            <p>No nutrition info</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>

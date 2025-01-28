@@ -10,6 +10,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('patients/', include('patients.urls')),
     path('dishes/', include('dishes.urls')),
+    path('menu/', include('menu.urls')),
    
 ]
 

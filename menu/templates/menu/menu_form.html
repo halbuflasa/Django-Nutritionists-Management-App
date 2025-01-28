@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if menu %}Edit Menu{% else %}Create Menu{% endif %}</title>
+    {% load static %}
+    <style>
+        /* General Reset */
+        html, body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Navbar */
+        nav {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        nav div:first-child {
+            margin-left: 20px;
+            flex: 1;
+            text-align: left;
+        }
+
+        nav div:last-child {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        nav form {
+            margin: 0;
+        }
+
+        .logout {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+
+        .logout:hover {
+            text-decoration: underline;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 600px;
+            width: 90%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin: auto;
+            margin-top: 80px; /* So it sits below the fixed navbar */
+            box-sizing: border-box;
+        }
+
+        /* Headings */
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        /* Form */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Optional navigation bar (remove if not needed) -->
+    <nav>
+        <div>Welcome, {{ request.user.username }}</div>
+        <div>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'menu:menu_list' %}">Menu List</a>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <h1>{% if menu %}Edit Menu{% else %}Create a New Menu{% endif %}</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">
+                {% if menu %}Update{% else %}Create{% endif %} Menu
+            </button>
+        </form>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startDateInput = document.querySelector('input[name="start_date"]');
+    
+            if (startDateInput) {
+                const today = new Date();
+                const saturdayDelta = (6 - today.getDay() + 7) % 7;  // Calculate days until Saturday
+                const nextSaturday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + saturdayDelta);
+                
+                // Format next Saturday as YYYY-MM-DD
+                const formattedSaturday = nextSaturday.toISOString().split('T')[0];
+    
+                // Highlight next Saturday as a suggested date
+                startDateInput.min = today.toISOString().split('T')[0]; // Disable past dates
+                startDateInput.value = formattedSaturday;  // Pre-fill with suggested Saturday
+            }
+        });
+    </script>
+    
+</body>
+</html>
